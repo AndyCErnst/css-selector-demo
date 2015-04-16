@@ -16,24 +16,24 @@
 		}
 	</style>
 	<style id="style1">
-		{
-			background-color: red;
-		}
 	</style>
 	<style id="style2"></style>
 </head>
 <body>
 	<div id="box" class="">the box</div>
-	<div class="first-section">
+
+	<div id="first-section" class="section" data-id="1">
 		<h4>First stylesheet says</h4>
 		<pre id="1st-stylesheet-listing" class="stylesheet">
 		</pre>
+		<button class="add-class">Add Class</button>
+		<button class="add-10-classes">Add 10 Classes</button>
 	</div>
-	<div id="second-section">
+	<div id="second-section" class="section" data-id="2">
 		<h4>Second stylesheet says</h4>
 		<pre id="2nd-stylesheet-listing" class="stylesheet"></pre>
-		<button id="add-class">Add Class</button>
-		<button id="add-10-classes">Add 10 Classes</button>
+		<button class="add-class">Add Class</button>
+		<button class="add-10-classes">Add 10 Classes</button>
 	</div>
 
 	<script src="./bower_components/jquery/dist/jquery.js"></script>

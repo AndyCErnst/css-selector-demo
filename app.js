@@ -6,7 +6,7 @@ var ssRules =
 var $ssLists = 
 	[ $('#1st-stylesheet-listing'), 
 	$('#2nd-stylesheet-listing')];
-var classCounter = [1,1];
+var classCounter = [0,0];
 var $box = $('#box');
 
 
@@ -16,20 +16,23 @@ var $box = $('#box');
 })()
 
 var addOneClass = function(num) {
-	var newClass = 'c'+ classCounter[0]++;
-	$box.addClass(newClass);
-	newClass = '.' + newClass;
-	ssRules[1] = newClass + ssRules[1];
-	$stylesheets[1].text(ssRules[1]);
-	$ssLists[1].text(ssRules[1]);
+	console.log('num is ' + num);
+	classCounter[num]++;
+	$box.addClass('c'+classCounter[num]);
+	ssRules[num] = '.c'+classCounter[num] + ssRules[num];
+	$stylesheets[num].text(ssRules[num]);
+	$ssLists[num].text(ssRules[num]);
 }
 
-$('#add-class').on('click', addOneClass);
+$('.add-class').on('click', function(){
+	addOneClass($(this).closest('.section').data('id')-1);
+});
 
-$('#add-10-classes').on('click', function(){
+$('.add-10-classes').on('click', function(){
+	var id = $(this).closest('.section').data('id');
 	var i = 10;
 	while(i--) {
-		addOneClass();
+		addOneClass(id-1);
 	}
 });
 
