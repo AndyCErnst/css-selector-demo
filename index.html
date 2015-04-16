@@ -4,22 +4,37 @@
 	<title>CSS Selector Demo</title>
 	<style>
 		#box {
-			background-color: red;
+			border: 1px dotted black;
 			width: 10em;
 			text-align: center;
 			font-size: 24px;
 			padding: 2em;
 		}
+		.stylesheet {
+			max-width: 500px;
+			word-break: break-word;
+		}
 	</style>
-	<style id="style"></style>
+	<style id="style1">
+		{
+			background-color: red;
+		}
+	</style>
+	<style id="style2"></style>
 </head>
 <body>
 	<div id="box" class="">the box</div>
-
-	<button id="add-class">Add Class</button>
-	<button id="add-10-classes">Add 10 Classes</button>
-	<p>Second stylesheet says</p>
-	<pre id="stylesheet-listing"></pre>
+	<div class="first-section">
+		<h4>First stylesheet says</h4>
+		<pre id="1st-stylesheet-listing" class="stylesheet">
+		</pre>
+	</div>
+	<div id="second-section">
+		<h4>Second stylesheet says</h4>
+		<pre id="2nd-stylesheet-listing" class="stylesheet"></pre>
+		<button id="add-class">Add Class</button>
+		<button id="add-10-classes">Add 10 Classes</button>
+	</div>
 
 	<script src="./bower_components/jquery/dist/jquery.js"></script>
 	<script src="./app.js"></script>
