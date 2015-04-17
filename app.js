@@ -10,9 +10,9 @@ var addStylesheet = function(){
 	var newRule = ' {\n\tbackground-color: ' + color + ';\n}';
 	var sheetDisplay = sheetDisplayTemplate({number: currentSheetNum, rule: newRule, color: color});
 	var newSheet = {
-		sheet: $('<style>'+newRule+'</style>').appendTo('head'),
+		classes: [],
 		rule: newRule,
-		counter: 0,
+		sheet: $('<style>'+newRule+'</style>').appendTo('head'),
 		display: $(sheetDisplay).appendTo($('#stylesheet-section')).find('.sheet-display')
 	};
 	stylesheets.push(newSheet);
@@ -23,11 +23,17 @@ $('#add-stylesheet').on('click', addStylesheet);
 var addOneClass = function(num) {
 	console.log('num is ' + num);
 	var stylesheet = stylesheets[num];
-	stylesheet.counter++;
-	$box.addClass('c'+stylesheet.counter);
-	stylesheet.rule = '.c'+stylesheet.counter + stylesheet.rule;
-	stylesheet.sheet.text(stylesheet.rule);
-	stylesheet.display.text(stylesheet.rule);
+	var className = 'c'+(stylesheet.classes.length+1)
+	stylesheet.classes.push('.' + className);
+	var selectorAndRule = stylesheet.classes.join('') + stylesheet.rule
+	stylesheet.sheet.text(selectorAndRule);
+	stylesheet.display.text(selectorAndRule);
+	$box.addClass(className);
+};
+
+var removeOneClass = function(num) {
+	// var stylesheet = stylesheets[num];
+	// var rule
 };
 
 $('#stylesheet-section').on('click', '.add-class', function(){
@@ -41,6 +47,11 @@ $('#stylesheet-section').on('click', '.add-10-classes', function(){
 	while(i--) {
 		addOneClass(id);
 	}
+});
+
+$('#stylesheet-section').on('click', '.remove-class', function(){
+	var id = $(this).closest('.section').data('id')-1;
+	removeOneClass(id);
 });
 
 function RandomColorGenerator() {
@@ -63,8 +74,8 @@ function RandomColorGenerator() {
 		console.log('returning color ' + color);
 		return color
 	}
-
 };
+
 (function init(){
 	addStylesheet();
 })();
