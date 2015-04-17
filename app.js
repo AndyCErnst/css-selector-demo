@@ -2,11 +2,11 @@ var stylesheets = [];
 var $box = $('#box');
 var sheetDisplayTemplate = _.template($('#sheet-section-template').text());
 var currentSheetNum = 0;
-var colors = ['gray', 'pink', 'green', 'blue', 'purple', 'orange', 'yellow', 'red'];
+var randomColor = new RandomColorGenerator();
 
 var addStylesheet = function(){
 	currentSheetNum++;
-	var color = colors.pop();
+	var color = randomColor();
 	var newRule = ' {\n\tbackground-color: ' + color + ';\n}';
 	var sheetDisplay = sheetDisplayTemplate({number: currentSheetNum, rule: newRule, color: color});
 	var newSheet = {
@@ -45,6 +45,27 @@ $('#stylesheet-section').on('click', '.add-10-classes', function(){
 	}
 });
 
+function RandomColorGenerator() {
+	var colors = ['gray', 'pink', 'green', 'blue', 'purple', 'orange', 'yellow', 'red'];
+	var random = function() { return Math.floor(Math.random() * 255); }
+	var get3random = function(){ return [random(),random(),random()]; }
+	var checkSpread = function(colorArr) {
+		return Math.abs(colorArr[1] - colorArr[0]) + Math.abs(colorArr[2] - colorArr[0]) > 100;
+	};
+	return function(){
+		var color = colors.pop();
+		if (color) return color;
+		color = get3random();
+		while(!checkSpread(color)) {
+			console.log('color was ' + color.join(',') + ' trying again');
+			color = get3random();
+		}
+		color = 'rgb('+color.join(',')+')';
+		console.log('returning color ' + color);
+		return color
+	}
+
+};
 (function init(){
 	addStylesheet();
 })();
