@@ -23,8 +23,6 @@ $('#add-stylesheet').on('click', addStylesheet);
 var addOneClass = function(num) {
 	console.log('num is ' + num);
 	var stylesheet = stylesheets[num];
-	console.log('sheet is ');
-	console.dir(stylesheet);
 	stylesheet.counter++;
 	$box.addClass('c'+stylesheet.counter);
 	stylesheet.rule = '.c'+stylesheet.counter + stylesheet.rule;
@@ -33,8 +31,8 @@ var addOneClass = function(num) {
 };
 
 $('#stylesheet-section').on('click', '.add-class', function(){
-	console.log(this);
-	addOneClass($(this).closest('.section').data('id')-1);
+	var id = $(this).closest('.section').data('id')-1;
+	addOneClass(id);
 });
 
 $('#stylesheet-section').on('click', '.add-10-classes', function(){
@@ -46,20 +44,21 @@ $('#stylesheet-section').on('click', '.add-10-classes', function(){
 });
 
 function RandomColorGenerator() {
-	var colors = ['gray', 'pink', 'green', 'blue', 'purple', 'orange', 'yellow', 'red'];
-	var random = function() { return Math.floor(Math.random() * 255); }
-	var get3random = function(){ return [random(),random(),random()]; }
+	var defaultColors = ['gray', 'pink', 'green', 'blue', 'purple', 'orange', 'yellow', 'red'];
+	var randomColor = function() { return Math.floor(Math.random() * 255); }
+	var get3random = function(){ return [randomColor(),randomColor(),randomColor()]; }
 	var checkSpread = function(colorArr) {
 		return Math.abs(colorArr[1] - colorArr[0]) + Math.abs(colorArr[2] - colorArr[0]) > 100;
 	};
 	return function(){
-		var color = colors.pop();
+		var color = defaultColors.pop();
 		if (color) return color;
-		color = get3random();
-		while(!checkSpread(color)) {
-			console.log('color was ' + color.join(',') + ' trying again');
+		do{
 			color = get3random();
+			console.log('color was rgb(' + color.join(',') + ')');
 		}
+		while(!checkSpread(color))
+
 		color = 'rgb('+color.join(',')+')';
 		console.log('returning color ' + color);
 		return color
