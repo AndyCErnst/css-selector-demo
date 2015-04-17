@@ -3,40 +3,61 @@
 <head>
 	<title>CSS Selector Demo</title>
 	<style>
+		* {
+			box-sizing: border-box;
+		}
+		#box-container {
+			margin: 1em auto;
+			width: 10em;
+			font-size: 24px;
+		}
 		#box {
 			border: 1px dotted black;
+			margin: 1em auto;
 			width: 10em;
 			text-align: center;
-			font-size: 24px;
 			padding: 2em;
 		}
-		.stylesheet {
-			max-width: 500px;
+		.section {
+			max-width: 300px;
+			width: 100%;
+			display: inline-block;
+			margin: 1em;
 			word-break: break-word;
+			vertical-align: text-top;
+			border: 1px solid black;
+			padding: 1em;
+		}
+		.color-swatch {
+			width: 1em;
+			height: 1em;
+			display: inline-block;
+			vertical-align: text-bottom;
 		}
 	</style>
-	<style id="style1">
-	</style>
-	<style id="style2"></style>
 </head>
 <body>
-	<div id="box" class="">the box</div>
-
-	<div id="first-section" class="section" data-id="1">
-		<h4>First stylesheet says</h4>
-		<pre id="1st-stylesheet-listing" class="stylesheet">
-		</pre>
-		<button class="add-class">Add Class</button>
-		<button class="add-10-classes">Add 10 Classes</button>
-	</div>
-	<div id="second-section" class="section" data-id="2">
-		<h4>Second stylesheet says</h4>
-		<pre id="2nd-stylesheet-listing" class="stylesheet"></pre>
-		<button class="add-class">Add Class</button>
-		<button class="add-10-classes">Add 10 Classes</button>
+	<div id="box-container">
+		<div id="box" class="">the box</div>
+		<button id="add-stylesheet">Add Stylesheet</button>
 	</div>
 
+	<div id="stylesheet-section">
+	</div>
+
+	<script type="text/template" id="sheet-section-template">
+		<div class="section" data-id="<%= number %>">
+			<h4>
+				Stylesheet <%= number %> 
+				<div class="color-swatch" style="background-color: <%= color %>"></div>
+			</h4>
+			<pre class="sheet-display"><%= rule %></pre>
+			<button class="add-class">Add Class</button>
+			<button class="add-10-classes">Add 10 Classes</button>
+		</div>
+	</script>
 	<script src="./bower_components/jquery/dist/jquery.js"></script>
+	<script src="./bower_components/underscore/underscore.js"></script>
 	<script src="./app.js"></script>
 </body>
 </html>
