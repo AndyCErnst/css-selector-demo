@@ -21,19 +21,21 @@ var addStylesheet = function(){
 $('#add-stylesheet').on('click', addStylesheet);
 
 var addOneClass = function(num) {
-	console.log('num is ' + num);
 	var stylesheet = stylesheets[num];
 	var className = 'c'+(stylesheet.classes.length+1)
 	stylesheet.classes.push('.' + className);
-	var selectorAndRule = stylesheet.classes.join('') + stylesheet.rule
+	var selectorAndRule = stylesheet.classes.join('') + stylesheet.rule;
 	stylesheet.sheet.text(selectorAndRule);
 	stylesheet.display.text(selectorAndRule);
 	$box.addClass(className);
 };
 
 var removeOneClass = function(num) {
-	// var stylesheet = stylesheets[num];
-	// var rule
+	var stylesheet = stylesheets[num];
+	stylesheet.classes.pop();
+	var selectorAndRule = stylesheet.classes.join('') + stylesheet.rule;
+	stylesheet.sheet.text(selectorAndRule);
+	stylesheet.display.text(selectorAndRule);
 };
 
 $('#stylesheet-section').on('click', '.add-class', function(){
