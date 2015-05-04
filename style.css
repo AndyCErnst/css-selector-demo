@@ -1,7 +1,7 @@
 * {
 	box-sizing: border-box;
 }
-#box-container {
+#display-container {
 	margin: 1em auto;
 	width: 10em;
 	font-size: 24px;
@@ -14,7 +14,7 @@
 	padding: 2em;
 }
 .section {
-	max-width: 300px;
+	max-width: 370px;
 	width: 100%;
 	display: inline-block;
 	margin: 1em;

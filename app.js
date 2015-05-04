@@ -3,6 +3,7 @@ var $box = $('#box');
 var sheetDisplayTemplate = _.template($('#sheet-section-template').text());
 var currentSheetNum = 0;
 var randomColor = new RandomColorGenerator();
+var currentDepth = 1;
 
 var addStylesheet = function(){
 	currentSheetNum++;
@@ -11,6 +12,7 @@ var addStylesheet = function(){
 	var sheetDisplay = sheetDisplayTemplate({number: currentSheetNum, rule: newRule, color: color});
 	var newSheet = {
 		classes: [],
+		elements: [],
 		rule: newRule,
 		sheet: $('<style>'+newRule+'</style>').appendTo('head'),
 		display: $(sheetDisplay).appendTo($('#stylesheet-section')).find('.sheet-display')
@@ -20,6 +22,9 @@ var addStylesheet = function(){
 
 $('#add-stylesheet').on('click', addStylesheet);
 
+var findBoxElementDepth = function(){
+	return $('#box-container div').length;
+};
 var addOneClass = function(num) {
 	var stylesheet = stylesheets[num];
 	var className = 'c'+(stylesheet.classes.length+1)
@@ -38,13 +43,23 @@ var removeOneClass = function(num) {
 	stylesheet.display.text(selectorAndRule);
 };
 
+var addOneElement = function(num) {
+	var stylesheet = stylesheets[num];
+	stylesheet.elements.push('.' + className);
+	$('#box-container').html('<div>'+$('#box-container').html()+'</div>')
+};
+
+var removeOneElement = function(num) {
+
+};
+
 $('#stylesheet-section').on('click', '.add-class', function(){
-	var id = $(this).closest('.section').data('id')-1;
+	var id = getSectionId(this);
 	addOneClass(id);
 });
 
 $('#stylesheet-section').on('click', '.add-10-classes', function(){
-	var id = $(this).closest('.section').data('id')-1;
+	var id = getSectionId(this);
 	var i = 10;
 	while(i--) {
 		addOneClass(id);
@@ -52,10 +67,32 @@ $('#stylesheet-section').on('click', '.add-10-classes', function(){
 });
 
 $('#stylesheet-section').on('click', '.remove-class', function(){
-	var id = $(this).closest('.section').data('id')-1;
+	var id = getSectionId(this);
 	removeOneClass(id);
 });
 
+
+$('#stylesheet-section').on('click', '.add-element', function(){
+	var id = getSectionId(this);
+	addOneElement(id);
+});
+
+$('#stylesheet-section').on('click', '.add-10-elements', function(){
+	var id = getSectionId(this);
+	var i = 10;
+	while(i--) {
+		addOneElement(id);
+	}
+});
+
+$('#stylesheet-section').on('click', '.remove-element', function(){
+	var id = getSectionId(this);
+	removeOneElement(id);
+});
+
+function getSectionId(context) {
+	return $(context).closest('.section').data('id')-1;
+}
 function RandomColorGenerator() {
 	var defaultColors = ['gray', 'pink', 'green', 'blue', 'purple', 'orange', 'yellow', 'red'];
 	var randomColor = function() { return Math.floor(Math.random() * 255); }
