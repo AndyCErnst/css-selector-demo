@@ -14,9 +14,9 @@ var StyleSheet = function(color){
 	this.displayArea = null;
 };
 StyleSheet.prototype.update = function() {
-	var selector =  
+	var selector =
 		this.elements.join(' ') + ' ' + 
-		this.classes.join('')  + ' ';
+		this.classes.join('')  ;
 
 	if(!this.elements.length && !this.classes.length) {
 		this.sheet.text('');
@@ -24,7 +24,7 @@ StyleSheet.prototype.update = function() {
 		this.sheet.text(selector + '#box' + this.rule);
 	}
 	if(this.displayArea){
-		this.displayArea.text(selector + this.rule);
+		this.displayArea.text(selector + ' ' + this.rule);
 	} else {
 		console.err('Stylesheet ' + this.number + ' has no display area associated with it');
 	}
