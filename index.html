@@ -5,11 +5,11 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div id="display-container">
+	<div id="box-display-container">
 		<div id="box-container">
 			<div id="box" class="">the box</div>
 		</div>
-		<button id="add-stylesheet">Add Stylesheet</button>
+		<button id="add-stylesheet" class="button">Add Stylesheet</button>
 	</div>
 
 
@@ -17,17 +17,21 @@
 	</div>
 
 	<script type="text/template" id="sheet-section-template">
-		<div class="section" data-id="<%= number %>">
+		<div class="stylesheet-control-box" data-id="<%= number %>">
 			<h4>
 				Stylesheet <%= number %> 
 				<div class="color-swatch" style="background-color: <%= color %>"></div>
 			</h4>
-			<button class="button add-class">Add Class</button>
-			<button class="button remove-class">Remove Class</button>
-			<button class="button add-10-classes">Add 10 Classes</button>
-			<button class="button add-element">Add Element</button>
-			<button class="button remove-element">Remove Element</button>
-			<button class="button add-10-elements">Add 10 Elements</button>
+			<div class="button-container">
+				<button class="button add-class">Add Class</button>
+				<button class="button add-10-classes">Add 10 Classes</button>
+				<button class="button remove-class">Remove Class</button>
+			</div>
+			<div class="button-container">
+				<button class="button add-element">Add Element</button>
+				<button class="button add-10-elements">Add 10 Elements</button>
+				<button class="button remove-element">Remove Element</button>
+			</div>
 			<pre class="sheet-display"><%= rule %></pre>
 
 		</div>

@@ -1,66 +1,76 @@
+'use strict';
 var stylesheets = [];
 var sheetDisplayTemplate = _.template($('#sheet-section-template').text());
-var currentSheetNum = 0;
+var currentSheetNum = 1;
 var randomColor = new RandomColorGenerator();
-var currentDepth = 1;
 
-var addStylesheet = function(){
-	currentSheetNum++;
-	var color = randomColor();
-	var newRule = '#box {\n\tbackground-color: ' + color + ';\n}';
-	var sheetDisplay = sheetDisplayTemplate({number: currentSheetNum, rule: newRule, color: color});
-	var newSheet = {
-		classes: [],
-		elements: [],
-		rule: newRule,
-		sheet: $('<style>'+newRule+'</style>').appendTo('head'),
-		display: $(sheetDisplay).appendTo($('#stylesheet-section')).find('.sheet-display')
-	};
-	stylesheets.push(newSheet);
+var StyleSheet = function(color){
+	this.number = currentSheetNum++;
+	this.color = color;
+	this.rule = '#box {\n    background-color: ' + this.color + ';\n}';
+	this.classes = [];
+	this.elements = [];
+	this.sheet = $('<style>'+this.rule+'</style>').appendTo('head');
+	this.displayArea = null;
 };
+StyleSheet.prototype.update = function() {
+	var selectorAndRule =  
+		this.elements.join(' ') + ' ' + 
+		this.classes.join('') + this.rule;
 
-$('#add-stylesheet').on('click', addStylesheet);
+	this.sheet.text(selectorAndRule);
+	if(this.displayArea){
+		this.displayArea.text(selectorAndRule);
+	} else {
+		console.err('Stylesheet ' + this.number + ' has no display area associated with it');
+	}
+};
+var addStylesheet = function(){
+	var sheet = new StyleSheet(randomColor());
+	var sheetDisplay = sheetDisplayTemplate(sheet);
+	var sheetControlBox = $(sheetDisplay).appendTo($('#stylesheet-section'));
+	sheet.displayArea = sheetControlBox.find('.sheet-display');
+	stylesheets.push(sheet);
+};
 
 var getBoxElementDepth = function(){
 	return $('#box-container div').length;
 };
-var updateStylesheet = function(stylesheet){
-	var selectorAndRule =  
-		stylesheet.elements.join(' ') + ' ' + 
-		stylesheet.classes.join('') + stylesheet.rule;
 
-	stylesheet.sheet.text(selectorAndRule);
-	stylesheet.display.text(selectorAndRule);
+var getSectionId = function(context) {
+	return $(context).closest('.stylesheet-control-box').data('id')-1;
 }
-
 
 var addOneClass = function(num) {
 	var stylesheet = stylesheets[num];
-	var className = 'c'+(stylesheet.classes.length+1)
+	var className = 'c'+(stylesheet.classes.length+1);
 	stylesheet.classes.push('.' + className);
-	updateStylesheet(stylesheet);
+	stylesheet.update();
 	$('#box').addClass(className);
 };
 
 var removeOneClass = function(num) {
 	var stylesheet = stylesheets[num];
 	stylesheet.classes.pop();
-	updateStylesheet(stylesheet);
+	stylesheet.update();
 };
 
 var addOneElement = function(num) {
 	var stylesheet = stylesheets[num];
 	stylesheet.elements.push('div');
-	updateStylesheet(stylesheet);
+	stylesheet.update();
 	if(getBoxElementDepth() < stylesheet.elements.length)
-		$('#box-container').html('<div>'+$('#box-container').html()+'</div>')
+		$('#box-container').html('<div>'+$('#box-container').html()+'</div>');
 };
 
 var removeOneElement = function(num) {
 	var stylesheet = stylesheets[num];
 	stylesheet.elements.pop();
-	updateStylesheet(stylesheet);
+	stylesheet.update();
 };
+
+$('#add-stylesheet').on('click', addStylesheet);
+
 
 $('#stylesheet-section').on('click', '.add-class', function(){
 	addOneClass(getSectionId(this));
@@ -96,30 +106,24 @@ $('#stylesheet-section').on('click', '.add-10-elements', function(){
 });
 
 
-function getSectionId(context) {
-	return $(context).closest('.section').data('id')-1;
-};
 function RandomColorGenerator() {
 	var defaultColors = ['gray', 'pink', 'green', 'blue', 'purple', 'orange', 'yellow', 'red'];
-	var randomColor = function() { return Math.floor(Math.random() * 255); }
-	var get3random = function(){ return [randomColor(),randomColor(),randomColor()]; }
+	var randomColor = function() { return Math.floor(Math.random() * 255); };
+	var get3random = function(){ return [randomColor(),randomColor(),randomColor()]; };
 	var checkSpread = function(colorArr) {
 		return Math.abs(colorArr[1] - colorArr[0]) + Math.abs(colorArr[2] - colorArr[0]) > 100;
 	};
 	return function(){
 		var color = defaultColors.pop();
 		if (color) return color;
-		do{
+		do {
 			color = get3random();
-			console.log('color was rgb(' + color.join(',') + ')');
 		}
-		while(!checkSpread(color))
+		while(!checkSpread(color));
 
-		color = 'rgb('+color.join(',')+')';
-		console.log('returning color ' + color);
-		return color
-	}
-};
+		return 'rgb('+color.join(',')+')';
+	};
+}
 
 (function init(){
 	addStylesheet();
