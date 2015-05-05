@@ -7,20 +7,24 @@ var randomColor = new RandomColorGenerator();
 var StyleSheet = function(color){
 	this.number = currentSheetNum++;
 	this.color = color;
-	this.rule = '#box {\n    background-color: ' + this.color + ';\n}';
+	this.rule = '{\n    background-color: ' + this.color + ';\n}';
 	this.classes = [];
 	this.elements = [];
 	this.sheet = $('<style>'+this.rule+'</style>').appendTo('head');
 	this.displayArea = null;
 };
 StyleSheet.prototype.update = function() {
-	var selectorAndRule =  
+	var selector =  
 		this.elements.join(' ') + ' ' + 
-		this.classes.join('') + this.rule;
+		this.classes.join('')  + ' ';
 
-	this.sheet.text(selectorAndRule);
+	if(!this.elements.length && !this.classes.length) {
+		this.sheet.text('');
+	} else{
+		this.sheet.text(selector + '#box' + this.rule);
+	}
 	if(this.displayArea){
-		this.displayArea.text(selectorAndRule);
+		this.displayArea.text(selector + this.rule);
 	} else {
 		console.err('Stylesheet ' + this.number + ' has no display area associated with it');
 	}
@@ -105,6 +109,10 @@ $('#stylesheet-section').on('click', '.add-10-elements', function(){
 	}
 });
 
+// May turn this into a direct edit mode
+$('#stylesheet-section').on('click', '.sheet-display', function(){
+	$(this).toggleClass('dark');
+});
 
 function RandomColorGenerator() {
 	var defaultColors = ['gray', 'pink', 'green', 'blue', 'purple', 'orange', 'yellow', 'red'];
