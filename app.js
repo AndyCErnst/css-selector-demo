@@ -1,5 +1,4 @@
 var stylesheets = [];
-var $box = $('#box');
 var sheetDisplayTemplate = _.template($('#sheet-section-template').text());
 var currentSheetNum = 0;
 var randomColor = new RandomColorGenerator();
@@ -8,7 +7,7 @@ var currentDepth = 1;
 var addStylesheet = function(){
 	currentSheetNum++;
 	var color = randomColor();
-	var newRule = ' {\n\tbackground-color: ' + color + ';\n}';
+	var newRule = '#box {\n\tbackground-color: ' + color + ';\n}';
 	var sheetDisplay = sheetDisplayTemplate({number: currentSheetNum, rule: newRule, color: color});
 	var newSheet = {
 		classes: [],
@@ -22,40 +21,53 @@ var addStylesheet = function(){
 
 $('#add-stylesheet').on('click', addStylesheet);
 
-var findBoxElementDepth = function(){
+var getBoxElementDepth = function(){
 	return $('#box-container div').length;
 };
+var updateStylesheet = function(stylesheet){
+	var selectorAndRule =  
+		stylesheet.elements.join(' ') + ' ' + 
+		stylesheet.classes.join('') + stylesheet.rule;
+
+	stylesheet.sheet.text(selectorAndRule);
+	stylesheet.display.text(selectorAndRule);
+}
+
+
 var addOneClass = function(num) {
 	var stylesheet = stylesheets[num];
 	var className = 'c'+(stylesheet.classes.length+1)
 	stylesheet.classes.push('.' + className);
-	var selectorAndRule = stylesheet.classes.join('') + stylesheet.rule;
-	stylesheet.sheet.text(selectorAndRule);
-	stylesheet.display.text(selectorAndRule);
-	$box.addClass(className);
+	updateStylesheet(stylesheet);
+	$('#box').addClass(className);
 };
 
 var removeOneClass = function(num) {
 	var stylesheet = stylesheets[num];
 	stylesheet.classes.pop();
-	var selectorAndRule = stylesheet.classes.join('') + stylesheet.rule;
-	stylesheet.sheet.text(selectorAndRule);
-	stylesheet.display.text(selectorAndRule);
+	updateStylesheet(stylesheet);
 };
 
 var addOneElement = function(num) {
 	var stylesheet = stylesheets[num];
-	stylesheet.elements.push('.' + className);
-	$('#box-container').html('<div>'+$('#box-container').html()+'</div>')
+	stylesheet.elements.push('div');
+	updateStylesheet(stylesheet);
+	if(getBoxElementDepth() < stylesheet.elements.length)
+		$('#box-container').html('<div>'+$('#box-container').html()+'</div>')
 };
 
 var removeOneElement = function(num) {
-
+	var stylesheet = stylesheets[num];
+	stylesheet.elements.pop();
+	updateStylesheet(stylesheet);
 };
 
 $('#stylesheet-section').on('click', '.add-class', function(){
-	var id = getSectionId(this);
-	addOneClass(id);
+	addOneClass(getSectionId(this));
+});
+
+$('#stylesheet-section').on('click', '.remove-class', function(){
+	removeOneClass(getSectionId(this));
 });
 
 $('#stylesheet-section').on('click', '.add-10-classes', function(){
@@ -66,15 +78,13 @@ $('#stylesheet-section').on('click', '.add-10-classes', function(){
 	}
 });
 
-$('#stylesheet-section').on('click', '.remove-class', function(){
-	var id = getSectionId(this);
-	removeOneClass(id);
-});
-
 
 $('#stylesheet-section').on('click', '.add-element', function(){
-	var id = getSectionId(this);
-	addOneElement(id);
+	addOneElement(getSectionId(this));
+});
+
+$('#stylesheet-section').on('click', '.remove-element', function(){
+	removeOneElement(getSectionId(this));
 });
 
 $('#stylesheet-section').on('click', '.add-10-elements', function(){
@@ -85,14 +95,10 @@ $('#stylesheet-section').on('click', '.add-10-elements', function(){
 	}
 });
 
-$('#stylesheet-section').on('click', '.remove-element', function(){
-	var id = getSectionId(this);
-	removeOneElement(id);
-});
 
 function getSectionId(context) {
 	return $(context).closest('.section').data('id')-1;
-}
+};
 function RandomColorGenerator() {
 	var defaultColors = ['gray', 'pink', 'green', 'blue', 'purple', 'orange', 'yellow', 'red'];
 	var randomColor = function() { return Math.floor(Math.random() * 255); }
